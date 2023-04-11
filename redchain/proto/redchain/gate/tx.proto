@@ -1,7 +1,20 @@
 syntax = "proto3";
+
 package redchain.gate;
 
 option go_package = "redchain/x/gate/types";
 
 // Msg defines the Msg service.
-service Msg {}
+service Msg {
+  rpc SendDustpacket (MsgSendDustpacket) returns (MsgSendDustpacketResponse);
+}
+message MsgSendDustpacket {
+  string body             = 5;
+  string creator          = 1;
+  string port             = 2;
+  string channelID        = 3;
+  uint64 timeoutTimestamp = 4;
+}
+
+message MsgSendDustpacketResponse {}
+
