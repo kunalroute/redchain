@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"redchain/x/redchain/types"
+	"redchain/x/gate/types"
 )
 
 // GetParams get all parameters as types.Params

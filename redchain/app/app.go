@@ -103,13 +103,16 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	gatemodule "redchain/x/gate"
+	gatemodulekeeper "redchain/x/gate/keeper"
+	gatemoduletypes "redchain/x/gate/types"
 	redchainmodule "redchain/x/redchain"
-		redchainmodulekeeper "redchain/x/redchain/keeper"
-		redchainmoduletypes "redchain/x/redchain/types"
-// this line is used by starport scaffolding # stargate/app/moduleImport
+	redchainmodulekeeper "redchain/x/redchain/keeper"
+	redchainmoduletypes "redchain/x/redchain/types"
+	// this line is used by starport scaffolding # stargate/app/moduleImport
 
-	"redchain/docs"
 	appparams "redchain/app/params"
+	"redchain/docs"
 )
 
 const (
@@ -165,7 +168,8 @@ var (
 		ica.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		redchainmodule.AppModuleBasic{},
-// this line is used by starport scaffolding # stargate/app/moduleBasic
+		gatemodule.AppModuleBasic{},
+		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
 	// module account permissions
@@ -238,9 +242,10 @@ type App struct {
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
-	
-		RedchainKeeper redchainmodulekeeper.Keeper
-// this line is used by starport scaffolding # stargate/app/keeperDeclaration
+	RedchainKeeper   redchainmodulekeeper.Keeper
+	ScopedGateKeeper capabilitykeeper.ScopedKeeper
+	GateKeeper       gatemodulekeeper.Keeper
+	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
 	mm *module.Manager
@@ -285,7 +290,8 @@ func New(
 		ibctransfertypes.StoreKey, icahosttypes.StoreKey, capabilitytypes.StoreKey, group.StoreKey,
 		icacontrollertypes.StoreKey,
 		redchainmoduletypes.StoreKey,
-// this line is used by starport scaffolding # stargate/app/storeKey
+		gatemoduletypes.StoreKey,
+		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -496,17 +502,29 @@ func New(
 		govConfig,
 	)
 
-	
-		app.RedchainKeeper = *redchainmodulekeeper.NewKeeper(
-			appCodec,
-			keys[redchainmoduletypes.StoreKey],
-			keys[redchainmoduletypes.MemStoreKey],
-			app.GetSubspace(redchainmoduletypes.ModuleName),
-			
-			)
-		redchainModule := redchainmodule.NewAppModule(appCodec, app.RedchainKeeper, app.AccountKeeper, app.BankKeeper)
+	app.RedchainKeeper = *redchainmodulekeeper.NewKeeper(
+		appCodec,
+		keys[redchainmoduletypes.StoreKey],
+		keys[redchainmoduletypes.MemStoreKey],
+		app.GetSubspace(redchainmoduletypes.ModuleName),
+	)
+	redchainModule := redchainmodule.NewAppModule(appCodec, app.RedchainKeeper, app.AccountKeeper, app.BankKeeper)
 
-		// this line is used by starport scaffolding # stargate/app/keeperDefinition
+	scopedGateKeeper := app.CapabilityKeeper.ScopeToModule(gatemoduletypes.ModuleName)
+	app.ScopedGateKeeper = scopedGateKeeper
+	app.GateKeeper = *gatemodulekeeper.NewKeeper(
+		appCodec,
+		keys[gatemoduletypes.StoreKey],
+		keys[gatemoduletypes.MemStoreKey],
+		app.GetSubspace(gatemoduletypes.ModuleName),
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		scopedGateKeeper,
+	)
+	gateModule := gatemodule.NewAppModule(appCodec, app.GateKeeper, app.AccountKeeper, app.BankKeeper)
+
+	gateIBCModule := gatemodule.NewIBCModule(app.GateKeeper)
+	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	/**** IBC Routing ****/
 
@@ -517,6 +535,7 @@ func New(
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
+	ibcRouter.AddRoute(gatemoduletypes.ModuleName, gateIBCModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
@@ -572,7 +591,8 @@ func New(
 		transferModule,
 		icaModule,
 		redchainModule,
-// this line is used by starport scaffolding # stargate/app/appModule
+		gateModule,
+		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -602,7 +622,8 @@ func New(
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		redchainmoduletypes.ModuleName,
-// this line is used by starport scaffolding # stargate/app/beginBlockers
+		gatemoduletypes.ModuleName,
+		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -627,7 +648,8 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		redchainmoduletypes.ModuleName,
-// this line is used by starport scaffolding # stargate/app/endBlockers
+		gatemoduletypes.ModuleName,
+		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -657,7 +679,8 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		redchainmoduletypes.ModuleName,
-// this line is used by starport scaffolding # stargate/app/initGenesis
+		gatemoduletypes.ModuleName,
+		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
 	// Uncomment if you want to set a custom migration order here.
@@ -687,7 +710,8 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		redchainModule,
-// this line is used by starport scaffolding # stargate/app/appModule
+		gateModule,
+		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
 
@@ -892,7 +916,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(redchainmoduletypes.ModuleName)
-// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(gatemoduletypes.ModuleName)
+	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
 }

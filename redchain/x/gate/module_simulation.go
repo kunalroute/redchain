@@ -1,4 +1,4 @@
-package redchain
+package gate
 
 import (
 	"math/rand"
@@ -10,14 +10,14 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"redchain/testutil/sample"
-	redchainsimulation "redchain/x/redchain/simulation"
-	"redchain/x/redchain/types"
+	gatesimulation "redchain/x/gate/simulation"
+	"redchain/x/gate/types"
 )
 
 // avoid unused import issue
 var (
 	_ = sample.AccAddress
-	_ = redchainsimulation.FindAccount
+	_ = gatesimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
 	_ = baseapp.Paramspace
@@ -33,11 +33,12 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	redchainGenesis := types.GenesisState{
+	gateGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
+		PortId: types.PortID,
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&redchainGenesis)
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&gateGenesis)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals

@@ -1,0 +1,13 @@
+syntax = "proto3";
+package redchain.gate;
+
+option go_package = "redchain/x/gate/types";
+
+message GatePacketData {
+    oneof packet {
+        NoData noData = 1;
+    }
+}
+
+message NoData {
+}

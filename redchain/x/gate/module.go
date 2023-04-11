@@ -1,4 +1,4 @@
-package redchain
+package gate
 
 import (
 	"context"
@@ -16,14 +16,16 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"redchain/x/redchain/client/cli"
-	"redchain/x/redchain/keeper"
-	"redchain/x/redchain/types"
+	porttypes "github.com/cosmos/ibc-go/v6/modules/core/05-port/types"
+	"redchain/x/gate/client/cli"
+	"redchain/x/gate/keeper"
+	"redchain/x/gate/types"
 )
 
 var (
 	_ module.AppModule      = AppModule{}
 	_ module.AppModuleBasic = AppModuleBasic{}
+	_ porttypes.IBCModule   = IBCModule{}
 )
 
 // ----------------------------------------------------------------------------

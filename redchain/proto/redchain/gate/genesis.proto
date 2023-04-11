@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package redchain.gate;
+
+import "gogoproto/gogo.proto";
+import "redchain/gate/params.proto";
+
+option go_package = "redchain/x/gate/types";
+
+// GenesisState defines the gate module's genesis state.
+message GenesisState {
+  Params params  = 1 [(gogoproto.nullable) = false];
+  string port_id = 2;
+}
+
