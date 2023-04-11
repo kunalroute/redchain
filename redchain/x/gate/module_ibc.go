@@ -160,8 +160,8 @@ func (im IBCModule) OnRecvPacket(
 	}
 
 	// // Dispatch packet
-	// switch packet := modulePacketData.Packet.(type) {
-	// case *types.GatePacketData_DustpacketPacket:
+	switch packet := modulePacketData.Packet.(type) {
+	case *types.GatePacketData_DustpacketPacket:
 	packetAck, err := im.keeper.OnRecvDustpacketPacket(ctx, modulePacket, *packet.DustpacketPacket)
 	if err != nil {
 		ack = channeltypes.NewErrorAcknowledgement(err)
@@ -181,10 +181,10 @@ func (im IBCModule) OnRecvPacket(
 		),
 	)
 	// this line is used by starport scaffolding # ibc/packet/module/recv
-	// default:
-	// 	err := fmt.Errorf("unrecognized %s packet type: %T", types.ModuleName, packet)
-	// 	return channeltypes.NewErrorAcknowledgement(err)
-	// }
+	default:
+		err := fmt.Errorf("unrecognized %s packet type: %T", types.ModuleName, packet)
+		return channeltypes.NewErrorAcknowledgement(err)
+	}
 
 	// NOTE: acknowledgement will be written synchronously during IBC handler execution.
 	return ack
@@ -267,17 +267,17 @@ func (im IBCModule) OnTimeoutPacket(
 	}
 
 	// Dispatch packet
-	// switch packet := modulePacketData.Packet.(type) {
-	// case *types.GatePacketData_DustpacketPacket:
+	switch packet := modulePacketData.Packet.(type) {
+	case *types.GatePacketData_DustpacketPacket:
 	err := im.keeper.OnTimeoutDustpacketPacket(ctx, modulePacket, *packet.DustpacketPacket)
 	if err != nil {
 		return err
 	}
 	// this line is used by starport scaffolding # ibc/packet/module/timeout
-	// default:
-	// 	errMsg := fmt.Sprintf("unrecognized %s packet type: %T", types.ModuleName, packet)
-	// 	return sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
-	// }
+	default:
+		errMsg := fmt.Sprintf("unrecognized %s packet type: %T", types.ModuleName, packet)
+		return sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
+	}
 
 	return nil
 }
