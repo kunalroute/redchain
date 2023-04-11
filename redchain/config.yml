@@ -3,19 +3,35 @@ accounts:
 - name: alice
   coins:
   - 20000token
-  - 200000000stake
+  - 20000000000000000stake
 - name: bob
   coins:
   - 10000token
-  - 100000000stake
+  - 1000000000000000000stake
 client:
   openapi:
     path: docs/static/openapi.yml
 faucet:
   name: bob
   coins:
-  - 5token
-  - 100000stake
+  - 500000token
+  - 100000000000000000stake
+  host: 0.0.0.0:4501
+genesis:
+  chain_id: red
 validators:
 - name: alice
   bonded: 100000000stake
+  app:
+    api:
+      address: :1318
+    grpc:
+      address: :9092
+    grpc-web:
+      address: :9093
+  config:
+    p2p:
+      laddr: :26658
+    rpc:
+      laddr: :26659
+      pprof_laddr: :6061
