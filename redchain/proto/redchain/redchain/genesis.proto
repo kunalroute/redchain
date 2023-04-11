@@ -1,0 +1,12 @@
+syntax = "proto3";
+package redchain.redchain;
+
+import "gogoproto/gogo.proto";
+import "redchain/redchain/params.proto";
+
+option go_package = "redchain/x/redchain/types";
+
+// GenesisState defines the redchain module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

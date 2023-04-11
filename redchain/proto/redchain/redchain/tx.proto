@@ -1,0 +1,7 @@
+syntax = "proto3";
+package redchain.redchain;
+
+option go_package = "redchain/x/redchain/types";
+
+// Msg defines the Msg service.
+service Msg {}
