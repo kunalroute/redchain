@@ -14,7 +14,7 @@ const (
 	MemStoreKey = "mem_gate"
 
 	// Version defines the current version the IBC module supports
-	Version = "gate-1"
+	Version = "ics20-1"
 
 	// PortID is the default port id that module binds to
 	PortID = "gate"

@@ -67,11 +67,11 @@ func (im IBCModule) OnChanOpenTry(
 	counterparty channeltypes.Counterparty,
 	counterpartyVersion string,
 ) (string, error) {
-
-	fmt.Println("KUNAL OnChanOpenTry")
-
 	//Require portID is the portID module is bound to
 	boundPort := im.keeper.GetPort(ctx)
+	fmt.Println("KUNAL OnChanOpenTry: ", portID, " bound port", boundPort)
+
+
 	if boundPort != portID {
 		return "", sdkerrors.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort)
 	}
@@ -149,7 +149,8 @@ func (im IBCModule) OnRecvPacket(
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
 
-	fmt.Println("KUNAL OnRecvPacket", modulePacket)
+	fmt.Println("KUNAL OnRecvPacket", modulePacket.Sequence, modulePacket.SourcePort, modulePacket.SourceChannel, modulePacket.DestinationPort, modulePacket.DestinationChannel, modulePacket.Data)
+
 	var ack channeltypes.Acknowledgement
 
 	// this line is used by starport scaffolding # oracle/packet/module/recv
