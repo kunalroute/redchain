@@ -20,8 +20,8 @@ message DustpacketPacketData {
   string route_amount       = 1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
   bytes  route_recipient    = 2;
   string dest_chain_id      = 3;
-  bytes  request_metadata   = 4;
-  bytes  request_packet     = 5;
+  string  request_metadata   = 4;
+  string  request_packet     = 5;
   bytes sender_address      = 6;
 }
 

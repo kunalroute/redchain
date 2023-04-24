@@ -4,12 +4,19 @@ package redchain.gate;
 
 option go_package = "redchain/x/gate/types";
 
+import "gogoproto/gogo.proto";
+
 // Msg defines the Msg service.
 service Msg {
   rpc SendDustpacket (MsgSendDustpacket) returns (MsgSendDustpacketResponse);
 }
 message MsgSendDustpacket {
-  string body             = 5;
+  string route_amount     = 5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  bytes  route_recipient  = 6;
+  string dest_chain_id    = 7;
+  string  request_metadata = 8;
+  string  request_packet   = 9;
+  bytes sender_address    = 10;
   string creator          = 1;
   string port             = 2;
   string channelID        = 3;

@@ -16,7 +16,11 @@ func (k msgServer) SendDustpacket(goCtx context.Context, msg *types.MsgSendDustp
 	// Construct the packet
 	var packet types.DustpacketPacketData
 
-	packet.Body = msg.Body
+	packet.RouteAmount = msg.RouteAmount
+	packet.RouteRecipient = msg.RouteRecipient
+	packet.DestChainId = msg.DestChainId
+	packet.RequestMetadata = msg.RequestMetadata
+	packet.RequestPacket = msg.RequestPacket
 
 	// Transmit the packet
 	_, err := k.TransmitDustpacketPacket(

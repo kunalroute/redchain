@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 )
 
 const TypeMsgSendDustpacket = "send_dustpacket"
@@ -14,14 +15,24 @@ func NewMsgSendDustpacket(
 	port string,
 	channelID string,
 	timeoutTimestamp uint64,
-	body string,
+	routerAmount github_com_cosmos_cosmos_sdk_types.Int,
+	routerRecepient []byte,
+	destChainId string,
+	requestMetadata string,
+	requestPacket string,
+	senderAddress []byte,
 ) *MsgSendDustpacket {
 	return &MsgSendDustpacket{
 		Creator:          creator,
 		Port:             port,
 		ChannelID:        channelID,
 		TimeoutTimestamp: timeoutTimestamp,
-		Body:             body,
+		RouteAmount:   routerAmount,
+		RouteRecipient: routerRecepient,
+		DestChainId:    destChainId,
+		RequestMetadata: requestMetadata, 
+		RequestPacket:  requestPacket,
+		SenderAddress:  senderAddress,
 	}
 }
 

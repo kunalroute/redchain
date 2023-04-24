@@ -6,6 +6,8 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
@@ -28,11 +30,16 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type MsgSendDustpacket struct {
-	Body             string `protobuf:"bytes,5,opt,name=body,proto3" json:"body,omitempty"`
-	Creator          string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Port             string `protobuf:"bytes,2,opt,name=port,proto3" json:"port,omitempty"`
-	ChannelID        string `protobuf:"bytes,3,opt,name=channelID,proto3" json:"channelID,omitempty"`
-	TimeoutTimestamp uint64 `protobuf:"varint,4,opt,name=timeoutTimestamp,proto3" json:"timeoutTimestamp,omitempty"`
+	RouteAmount      github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=route_amount,json=routeAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"route_amount"`
+	RouteRecipient   []byte                                 `protobuf:"bytes,6,opt,name=route_recipient,json=routeRecipient,proto3" json:"route_recipient,omitempty"`
+	DestChainId      string                                 `protobuf:"bytes,7,opt,name=dest_chain_id,json=destChainId,proto3" json:"dest_chain_id,omitempty"`
+	RequestMetadata  string                                 `protobuf:"bytes,8,opt,name=request_metadata,json=requestMetadata,proto3" json:"request_metadata,omitempty"`
+	RequestPacket    string                                 `protobuf:"bytes,9,opt,name=request_packet,json=requestPacket,proto3" json:"request_packet,omitempty"`
+	SenderAddress    []byte                                 `protobuf:"bytes,10,opt,name=sender_address,json=senderAddress,proto3" json:"sender_address,omitempty"`
+	Creator          string                                 `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Port             string                                 `protobuf:"bytes,2,opt,name=port,proto3" json:"port,omitempty"`
+	ChannelID        string                                 `protobuf:"bytes,3,opt,name=channelID,proto3" json:"channelID,omitempty"`
+	TimeoutTimestamp uint64                                 `protobuf:"varint,4,opt,name=timeoutTimestamp,proto3" json:"timeoutTimestamp,omitempty"`
 }
 
 func (m *MsgSendDustpacket) Reset()         { *m = MsgSendDustpacket{} }
@@ -68,11 +75,39 @@ func (m *MsgSendDustpacket) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgSendDustpacket proto.InternalMessageInfo
 
-func (m *MsgSendDustpacket) GetBody() string {
+func (m *MsgSendDustpacket) GetRouteRecipient() []byte {
 	if m != nil {
-		return m.Body
+		return m.RouteRecipient
+	}
+	return nil
+}
+
+func (m *MsgSendDustpacket) GetDestChainId() string {
+	if m != nil {
+		return m.DestChainId
 	}
 	return ""
+}
+
+func (m *MsgSendDustpacket) GetRequestMetadata() string {
+	if m != nil {
+		return m.RequestMetadata
+	}
+	return ""
+}
+
+func (m *MsgSendDustpacket) GetRequestPacket() string {
+	if m != nil {
+		return m.RequestPacket
+	}
+	return ""
+}
+
+func (m *MsgSendDustpacket) GetSenderAddress() []byte {
+	if m != nil {
+		return m.SenderAddress
+	}
+	return nil
 }
 
 func (m *MsgSendDustpacket) GetCreator() string {
@@ -147,23 +182,34 @@ func init() {
 func init() { proto.RegisterFile("redchain/gate/tx.proto", fileDescriptor_aeafa484f5812bdd) }
 
 var fileDescriptor_aeafa484f5812bdd = []byte{
-	// 256 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2b, 0x4a, 0x4d, 0x49,
-	0xce, 0x48, 0xcc, 0xcc, 0xd3, 0x4f, 0x4f, 0x2c, 0x49, 0xd5, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca,
-	0x2f, 0xc9, 0x17, 0xe2, 0x85, 0x89, 0xeb, 0x81, 0xc4, 0x95, 0xe6, 0x33, 0x72, 0x09, 0xfa, 0x16,
-	0xa7, 0x07, 0xa7, 0xe6, 0xa5, 0xb8, 0x94, 0x16, 0x97, 0x14, 0x24, 0x26, 0x67, 0xa7, 0x96, 0x08,
-	0x09, 0x71, 0xb1, 0x24, 0xe5, 0xa7, 0x54, 0x4a, 0xb0, 0x2a, 0x30, 0x6a, 0x70, 0x06, 0x81, 0xd9,
-	0x42, 0x12, 0x5c, 0xec, 0xc9, 0x45, 0xa9, 0x89, 0x25, 0xf9, 0x45, 0x12, 0x8c, 0x60, 0x61, 0x18,
-	0x17, 0xa4, 0xba, 0x20, 0xbf, 0xa8, 0x44, 0x82, 0x09, 0xa2, 0x1a, 0xc4, 0x16, 0x92, 0xe1, 0xe2,
-	0x4c, 0xce, 0x48, 0xcc, 0xcb, 0x4b, 0xcd, 0xf1, 0x74, 0x91, 0x60, 0x06, 0x4b, 0x20, 0x04, 0x84,
-	0xb4, 0xb8, 0x04, 0x4a, 0x32, 0x73, 0x53, 0xf3, 0x4b, 0x4b, 0x42, 0x32, 0x73, 0x53, 0x8b, 0x4b,
-	0x12, 0x73, 0x0b, 0x24, 0x58, 0x14, 0x18, 0x35, 0x58, 0x82, 0x30, 0xc4, 0x95, 0xa4, 0xb9, 0x24,
-	0x31, 0x1c, 0x18, 0x94, 0x5a, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0x6a, 0x94, 0xcc, 0xc5, 0xec, 0x5b,
-	0x9c, 0x2e, 0x14, 0xc3, 0xc5, 0x87, 0xe6, 0x03, 0x05, 0x3d, 0x14, 0x7f, 0xea, 0x61, 0x18, 0x21,
-	0xa5, 0x41, 0x48, 0x05, 0xcc, 0x12, 0x27, 0xfd, 0x13, 0x8f, 0xe4, 0x18, 0x2f, 0x3c, 0x92, 0x63,
-	0x7c, 0xf0, 0x48, 0x8e, 0x71, 0xc2, 0x63, 0x39, 0x86, 0x0b, 0x8f, 0xe5, 0x18, 0x6e, 0x3c, 0x96,
-	0x63, 0x88, 0x12, 0x85, 0x07, 0x72, 0x05, 0x34, 0x98, 0x2b, 0x0b, 0x52, 0x8b, 0x93, 0xd8, 0xc0,
-	0x41, 0x6d, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x78, 0x76, 0x1d, 0xc0, 0x84, 0x01, 0x00, 0x00,
+	// 427 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x92, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0x86, 0x63, 0x12, 0x5a, 0x32, 0x6d, 0xd2, 0xb2, 0x02, 0xb4, 0x14, 0xe4, 0x46, 0x91, 0x0a,
+	0x01, 0x09, 0x5b, 0x82, 0x27, 0x68, 0xe9, 0x25, 0x87, 0x48, 0x60, 0x38, 0x21, 0x24, 0x6b, 0xbb,
+	0x3b, 0x72, 0xac, 0xe2, 0x5d, 0xb3, 0x3b, 0x96, 0xca, 0x5b, 0xf0, 0x10, 0x3c, 0x4c, 0x8f, 0x3d,
+	0x22, 0x0e, 0x11, 0x4a, 0x5e, 0x04, 0x79, 0x6d, 0x83, 0x20, 0x07, 0x4e, 0x5e, 0x7f, 0xf3, 0xeb,
+	0x9f, 0x19, 0xcd, 0x0f, 0x0f, 0x2c, 0x2a, 0xb9, 0x14, 0xb9, 0x8e, 0x33, 0x41, 0x18, 0xd3, 0x55,
+	0x54, 0x5a, 0x43, 0x86, 0x8d, 0x3a, 0x1e, 0xd5, 0xfc, 0xe8, 0x5e, 0x66, 0x32, 0xe3, 0x2b, 0x71,
+	0xfd, 0x6a, 0x44, 0xd3, 0x6f, 0x7d, 0xb8, 0xbb, 0x70, 0xd9, 0x3b, 0xd4, 0xea, 0xbc, 0x72, 0x54,
+	0x0a, 0x79, 0x89, 0xc4, 0xde, 0xc2, 0xbe, 0x35, 0x15, 0x61, 0x2a, 0x0a, 0x53, 0x69, 0xe2, 0xb7,
+	0x27, 0xc1, 0x6c, 0x78, 0x16, 0x5d, 0xaf, 0x8e, 0x7b, 0x3f, 0x56, 0xc7, 0x4f, 0xb2, 0x9c, 0x96,
+	0xd5, 0x45, 0x24, 0x4d, 0x11, 0x4b, 0xe3, 0x0a, 0xe3, 0xda, 0xcf, 0x0b, 0xa7, 0x2e, 0x63, 0xfa,
+	0x52, 0xa2, 0x8b, 0xe6, 0x9a, 0x92, 0x3d, 0xef, 0x71, 0xea, 0x2d, 0xd8, 0x53, 0x38, 0x68, 0x2c,
+	0x2d, 0xca, 0xbc, 0xcc, 0x51, 0x13, 0xdf, 0x99, 0x04, 0xb3, 0xfd, 0x64, 0xec, 0x71, 0xd2, 0x51,
+	0x36, 0x85, 0x91, 0x42, 0x47, 0xa9, 0x1f, 0x3d, 0xcd, 0x15, 0xdf, 0xad, 0x9b, 0x27, 0x7b, 0x35,
+	0x7c, 0x5d, 0xb3, 0xb9, 0x62, 0xcf, 0xe0, 0xd0, 0xe2, 0xe7, 0xaa, 0x96, 0x15, 0x48, 0x42, 0x09,
+	0x12, 0xfc, 0x8e, 0x97, 0x1d, 0xb4, 0x7c, 0xd1, 0x62, 0x76, 0x02, 0xe3, 0x4e, 0xda, 0x2c, 0xc7,
+	0x87, 0x5e, 0x38, 0x6a, 0xe9, 0x9b, 0x66, 0xe3, 0x13, 0x18, 0x3b, 0xd4, 0x0a, 0x6d, 0x2a, 0x94,
+	0xb2, 0xe8, 0x1c, 0x07, 0x3f, 0xdd, 0xa8, 0xa1, 0xa7, 0x0d, 0x64, 0x1c, 0x76, 0xa5, 0x45, 0x41,
+	0xc6, 0xf2, 0xc0, 0xdb, 0x74, 0xbf, 0x8c, 0xc1, 0xa0, 0x34, 0x96, 0xf8, 0x2d, 0x8f, 0xfd, 0x9b,
+	0x3d, 0x86, 0xa1, 0x5c, 0x0a, 0xad, 0xf1, 0xd3, 0xfc, 0x9c, 0xf7, 0x7d, 0xe1, 0x0f, 0x60, 0xcf,
+	0xe1, 0x90, 0xf2, 0x02, 0x4d, 0x45, 0xef, 0xf3, 0x02, 0x1d, 0x89, 0xa2, 0xe4, 0x83, 0x49, 0x30,
+	0x1b, 0x24, 0x5b, 0x7c, 0xfa, 0x08, 0x1e, 0x6e, 0x5d, 0x29, 0x41, 0x57, 0x1a, 0xed, 0xf0, 0xa5,
+	0x84, 0xfe, 0xc2, 0x65, 0xec, 0x23, 0x8c, 0xff, 0x39, 0xe3, 0x24, 0xfa, 0x2b, 0x02, 0xd1, 0x96,
+	0xc5, 0xd1, 0xec, 0x7f, 0x8a, 0xae, 0xc9, 0x59, 0x7c, 0xbd, 0x0e, 0x83, 0x9b, 0x75, 0x18, 0xfc,
+	0x5c, 0x87, 0xc1, 0xd7, 0x4d, 0xd8, 0xbb, 0xd9, 0x84, 0xbd, 0xef, 0x9b, 0xb0, 0xf7, 0xe1, 0xfe,
+	0xef, 0xfc, 0x5d, 0xb5, 0x09, 0xac, 0x13, 0x70, 0xb1, 0xe3, 0x03, 0xf6, 0xea, 0x57, 0x00, 0x00,
+	0x00, 0xff, 0xff, 0x17, 0xeb, 0x91, 0xc0, 0x9f, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -266,13 +312,51 @@ func (m *MsgSendDustpacket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Body) > 0 {
-		i -= len(m.Body)
-		copy(dAtA[i:], m.Body)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Body)))
+	if len(m.SenderAddress) > 0 {
+		i -= len(m.SenderAddress)
+		copy(dAtA[i:], m.SenderAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.SenderAddress)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x52
 	}
+	if len(m.RequestPacket) > 0 {
+		i -= len(m.RequestPacket)
+		copy(dAtA[i:], m.RequestPacket)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RequestPacket)))
+		i--
+		dAtA[i] = 0x4a
+	}
+	if len(m.RequestMetadata) > 0 {
+		i -= len(m.RequestMetadata)
+		copy(dAtA[i:], m.RequestMetadata)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RequestMetadata)))
+		i--
+		dAtA[i] = 0x42
+	}
+	if len(m.DestChainId) > 0 {
+		i -= len(m.DestChainId)
+		copy(dAtA[i:], m.DestChainId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.DestChainId)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if len(m.RouteRecipient) > 0 {
+		i -= len(m.RouteRecipient)
+		copy(dAtA[i:], m.RouteRecipient)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteRecipient)))
+		i--
+		dAtA[i] = 0x32
+	}
+	{
+		size := m.RouteAmount.Size()
+		i -= size
+		if _, err := m.RouteAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
 	if m.TimeoutTimestamp != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.TimeoutTimestamp))
 		i--
@@ -357,7 +441,25 @@ func (m *MsgSendDustpacket) Size() (n int) {
 	if m.TimeoutTimestamp != 0 {
 		n += 1 + sovTx(uint64(m.TimeoutTimestamp))
 	}
-	l = len(m.Body)
+	l = m.RouteAmount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = len(m.RouteRecipient)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.DestChainId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RequestMetadata)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RequestPacket)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.SenderAddress)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -525,7 +627,7 @@ func (m *MsgSendDustpacket) Unmarshal(dAtA []byte) error {
 			}
 		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Body", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteAmount", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -553,7 +655,173 @@ func (m *MsgSendDustpacket) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Body = string(dAtA[iNdEx:postIndex])
+			if err := m.RouteAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteRecipient", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteRecipient = append(m.RouteRecipient[:0], dAtA[iNdEx:postIndex]...)
+			if m.RouteRecipient == nil {
+				m.RouteRecipient = []byte{}
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DestChainId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DestChainId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestMetadata", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RequestMetadata = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestPacket", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RequestPacket = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SenderAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SenderAddress = append(m.SenderAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.SenderAddress == nil {
+				m.SenderAddress = []byte{}
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
